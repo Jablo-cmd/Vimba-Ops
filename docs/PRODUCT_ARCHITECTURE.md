@@ -1,7 +1,27 @@
 # Vimba Ops — Product Architecture
 
 ## Product scope
-Vimba Ops is an enterprise operations platform for private security companies. It combines workforce/HR administration, leave, rostering, attendance, field operations, incidents, patrols, assets, regulated-equipment accountability, compliance, reporting and audit.
+Vimba Ops is an enterprise operations platform for private security companies. It combines workforce/HR administration, leave, rostering, attendance, field operations, incidents, patrols, assets, regulated-equipment accountability, compliance, reporting, AI-assisted decision support and audit.
+
+## AI & intelligence layer
+AI is a core platform capability, not a cosmetic add-on. It operates as an intelligence layer across Vimba Ops while respecting tenant isolation, role permissions, privacy controls and human approval.
+
+Planned AI capabilities include:
+- Operations copilot for natural-language questions about authorized operational data
+- Daily command-centre briefings and shift summaries
+- Incident report summarization and structured extraction
+- Incident trend and anomaly detection
+- Staffing and roster assistance, including leave-related coverage gaps
+- Workforce risk and compliance exception prioritization
+- Expiry and renewal alerts with intelligent prioritization
+- Patrol and attendance anomaly detection
+- Asset/inventory discrepancy detection
+- Management report generation
+- Natural-language search across authorized records
+- Predictive/forecasting features where sufficient historical data exists
+- AI-assisted recommendations with explanations and supporting source records
+
+AI must never silently make high-impact operational or employment decisions. Human users remain accountable for approvals and actions. AI outputs must be traceable, permission-aware and auditable.
 
 ## Tenancy
 Every operational record belongs to a company/tenant. Tenant isolation is enforced server-side and through database RLS.
