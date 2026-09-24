@@ -43,7 +43,19 @@
 - [ ] Document expiry
 - [ ] Vehicle register
 
-## Phase 4 — Control & reporting
+## Phase 4 — AI, control & reporting
+- [ ] AI operations copilot
+- [ ] AI daily command-centre briefing
+- [ ] AI incident summarization and structured extraction
+- [ ] AI trend/anomaly detection
+- [ ] AI-assisted roster and staffing analysis
+- [ ] AI compliance/expiry prioritization
+- [ ] AI inventory discrepancy detection
+- [ ] Natural-language authorized-data search
+- [ ] AI-assisted management reports
+- [ ] AI output audit trail and human approval controls
+
+## Phase 5 — Control & reporting
 - [ ] Operations dashboards
 - [ ] Workforce dashboards
 - [ ] HR / leave dashboards
@@ -53,7 +65,7 @@
 - [ ] Notifications
 - [ ] Exports
 
-## Phase 5 — Production hardening
+## Phase 6 — Production hardening
 - [ ] Unit tests
 - [ ] RLS regression tests
 - [ ] E2E tests
