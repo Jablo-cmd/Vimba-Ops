@@ -4,7 +4,7 @@
 - [x] Repository
 - [x] Architecture
 - [x] Security boundaries
-- [ ] App shell
+- [x] App shell
 - [ ] Authentication
 - [ ] Tenant model
 - [ ] RBAC
@@ -13,31 +13,41 @@
 - [ ] Audit framework
 - [ ] CI
 
-## Phase 2 — Operations
-- [ ] Companies
-- [ ] Sites/contracts/posts
-- [ ] Workforce
+## Phase 2 — Workforce & operations
+- [ ] Companies / tenants
+- [ ] Workforce profiles
+- [ ] HR records
+- [ ] Qualifications & training
+- [ ] Employee documents
+- [ ] Leave types & policies
+- [ ] Leave balances & accruals
+- [ ] Leave requests & approvals
+- [ ] Leave calendar
+- [ ] Leave ↔ roster integration
+- [ ] Sites / contracts / posts
 - [ ] Rosters
 - [ ] Attendance
 - [ ] Incidents
-- [ ] Patrols
+- [ ] Patrols / checkpoints
 
 ## Phase 3 — Inventory & compliance
 - [ ] Configurable inventory types
 - [ ] Asset register
 - [ ] Custody
-- [ ] Issue/return
+- [ ] Issue / return
 - [ ] Firearm register
-- [ ] Licence/reference tracking
+- [ ] Licence / reference tracking
 - [ ] Ammunition ledger
 - [ ] Inspections
 - [ ] Maintenance
 - [ ] Document expiry
 - [ ] Vehicle register
 
-## Phase 4 — Control
-- [ ] Dashboards
-- [ ] Exceptions
+## Phase 4 — Control & reporting
+- [ ] Operations dashboards
+- [ ] Workforce dashboards
+- [ ] HR / leave dashboards
+- [ ] Compliance exceptions
 - [ ] Client reports
 - [ ] Audit explorer
 - [ ] Notifications
