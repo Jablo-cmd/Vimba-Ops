@@ -1,0 +1,7 @@
+-- pgTAP regression plan.
+-- Assert RLS is enabled on every public operational table.
+-- Assert same-tenant SELECT/INSERT/UPDATE works for authorized internal roles.
+-- Assert cross-tenant SELECT/UPDATE/DELETE returns zero rows.
+-- Assert cross-tenant INSERT is rejected.
+-- Assert client users can only read client-linked sites/incidents/patrols/attendance.
+-- Assert audit_log cannot be updated or deleted by authenticated users.

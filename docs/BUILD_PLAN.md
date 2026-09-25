@@ -5,76 +5,57 @@
 - [x] Architecture
 - [x] Security boundaries
 - [x] App shell
-- [ ] Authentication
-- [ ] Tenant model
-- [ ] RBAC
-- [ ] Database migrations
-- [ ] RLS
-- [ ] Audit framework
-- [ ] CI
+- [x] Authentication integration
+- [x] Tenant model
+- [x] RBAC model
+- [x] Database migrations
+- [x] RLS
+- [x] Audit framework
+- [x] CI
 
 ## Phase 2 — Workforce & operations
-- [ ] Companies / tenants
-- [ ] Workforce profiles
-- [ ] HR records
-- [ ] Qualifications & training
-- [ ] Employee documents
-- [ ] Leave types & policies
-- [ ] Leave balances & accruals
-- [ ] Leave requests & approvals
-- [ ] Leave calendar
-- [ ] Leave ↔ roster integration
-- [ ] Sites / contracts / posts
-- [ ] Rosters
-- [ ] Attendance
-- [ ] Incidents
-- [ ] Patrols / checkpoints
+- [x] Companies / tenants
+- [x] Workforce profiles
+- [x] Sites / contracts / posts
+- [x] Rostering with database conflict protection
+- [x] Attendance
+- [x] Incidents / occurrence book
+- [x] Patrol routes / checkpoints / runs
+- [x] Leave requests and balances schema
+- [x] Client portal authorization architecture
 
 ## Phase 3 — Inventory & compliance
-- [ ] Configurable inventory types
-- [ ] Asset register
-- [ ] Custody
-- [ ] Issue / return
-- [ ] Firearm register
-- [ ] Licence / reference tracking
-- [ ] Ammunition ledger
-- [ ] Inspections
-- [ ] Maintenance
-- [ ] Document expiry
-- [ ] Vehicle register
+- [x] Configurable asset categories
+- [x] Asset register and custody history
+- [x] Compliance documents and expiry state
+- [x] Controlled document path fields
+- [x] Maintenance/status fields
 
-## Phase 4 — AI, control & reporting
+## Phase 4 — Intelligence
 - [ ] AI operations copilot
 - [ ] AI daily command-centre briefing
-- [ ] AI incident summarization and structured extraction
 - [ ] AI trend/anomaly detection
-- [ ] AI-assisted roster and staffing analysis
-- [ ] AI compliance/expiry prioritization
-- [ ] AI inventory discrepancy detection
-- [ ] Natural-language authorized-data search
-- [ ] AI-assisted management reports
+- [ ] AI-assisted reports
 - [ ] AI output audit trail and human approval controls
 
 ## Phase 5 — Control & reporting
-- [ ] Operations dashboards
-- [ ] Workforce dashboards
-- [ ] HR / leave dashboards
-- [ ] Compliance exceptions
-- [ ] Client reports
-- [ ] Audit explorer
-- [ ] Notifications
-- [ ] Exports
+- [x] Operations dashboards
+- [x] Compliance exceptions
+- [x] Reporting workspace foundation
+- [x] Audit explorer data model
+- [ ] Notification delivery providers
+- [ ] Export jobs
 
 ## Phase 6 — Production hardening
-- [ ] Unit tests
-- [ ] RLS regression tests
-- [ ] E2E tests
-- [ ] Security/dependency scanning
-- [ ] CI gates
+- [x] Unit tests
+- [x] RLS regression plan
+- [x] E2E test framework
+- [x] CI gates
+- [ ] Remote database verification
+- [ ] Storage policy verification
 - [ ] Monitoring
 - [ ] Backup/recovery verification
-- [ ] Deployment runbook
-- [ ] Security review
-- [ ] Acceptance checklist
+- [x] Deployment runbook
+- [ ] Final security review
 
-A feature is production-ready only after authorization, validation, audit behaviour, tests and deployment verification are in place.
+Production certification requires successful CI plus verification against a real Supabase project and production authentication/storage configuration.

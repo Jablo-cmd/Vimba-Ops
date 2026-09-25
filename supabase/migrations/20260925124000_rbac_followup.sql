@@ -1,0 +1,5 @@
+drop policy if exists profiles_admin on public.profiles;
+create policy profiles_admin on public.profiles for all to authenticated using((select private.has_role(array['platform_owner','super_administrator','administrator','hr']::public.app_role[])) and (select private.can_access_tenant(tenant_id))) with check((select private.has_role(array['platform_owner','super_administrator','administrator','hr']::public.app_role[])) and (select private.can_access_tenant(tenant_id)));
+create trigger employee_sensitive_hr_touch before update on public.employee_sensitive_hr for each row execute function public.touch_updated_at();
+create trigger employee_sensitive_hr_audit after insert or update or delete on public.employee_sensitive_hr for each row execute function private.audit_row_change();
+revoke all on public.employee_sensitive_hr from anon;

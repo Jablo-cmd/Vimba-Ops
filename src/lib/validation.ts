@@ -1,0 +1,1 @@
+export function required(value:string,label:string){const v=value.trim();if(!v)throw new Error(label+" is required.");return v;}
