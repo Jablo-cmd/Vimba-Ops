@@ -1,14 +1,9 @@
 # Vimba Ops
 
-Production-oriented security operations management platform for private security companies.
+Enterprise security operations platform for professional security and facilities companies.
 
-## Scope
-Operations, workforce, sites/posts, incidents, patrols, inventory, regulated-equipment accountability, compliance, reporting and audit.
+Implemented foundation: Supabase Auth, tenant-aware PostgreSQL/RLS, RBAC, command-centre metrics, clients, sites/posts, workforce, rostering, attendance, incidents/OB, patrols, leave, inventory, compliance, reporting, audit and CI.
 
-Regulated-equipment functionality is limited to lawful inventory, licensing/reference records, custody, issue/return, inspections, maintenance, stock accountability and audit history. No weapon-use or tactical functionality is provided.
+The browser uses only the Supabase publishable key. Never put a service-role or secret key in the Vite client.
 
-## Architecture target
-React + TypeScript + Vite, Supabase/PostgreSQL, RLS tenant isolation, MFA-ready Auth, controlled document storage, automated tests and GitHub Actions CI.
-
-## Status
-Initial repository foundation. Production certification follows security, functional, integration and deployment verification.
+See docs/DEPLOYMENT.md for production configuration.
