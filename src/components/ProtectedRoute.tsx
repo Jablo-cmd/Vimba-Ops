@@ -1,0 +1,1 @@
+import {Navigate} from "react-router-dom";import type {ReactNode} from "react";import type {Profile} from "../types";export default function ProtectedRoute({profile,children}:{profile:Profile|null;children:ReactNode}){if(!profile)return <Navigate to="/login" replace/>;if(profile.status!=="active")return <Navigate to="/login" replace/>;return <>{children}</>}
