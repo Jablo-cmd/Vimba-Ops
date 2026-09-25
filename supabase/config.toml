@@ -1,0 +1,11 @@
+[api]
+enabled = true
+schemas = ["public","storage"]
+[db]
+major_version = 17
+[studio]
+enabled = true
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173/**"]
