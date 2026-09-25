@@ -1,0 +1,1 @@
+import {describe,it,expect} from "vitest";import {required} from "./validation";describe("validation",()=>{it("rejects blank values",()=>expect(()=>required("  ","Name")).toThrow("Name is required."));it("trims values",()=>expect(required("  site  ","Site")).toBe("site"));});
