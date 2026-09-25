@@ -49,7 +49,7 @@
 ## Phase 6 — Production hardening
 - [x] Unit tests
 - [x] RLS regression plan
-- [x] E2E test framework
+- [ ] E2E test suite and browser harness
 - [x] CI gates
 - [ ] Remote database verification
 - [ ] Storage policy verification
