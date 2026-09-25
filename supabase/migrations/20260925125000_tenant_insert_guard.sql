@@ -1,0 +1,3 @@
+create or replace function public.set_current_tenant() returns trigger language plpgsql security invoker set search_path='' as $$begin if new.tenant_id is null then new.tenant_id=(select private.current_tenant_id());end if;return new;end$$;
+revoke execute on function public.set_current_tenant() from public,anon;grant execute on function public.set_current_tenant() to authenticated;
+do $$declare t text;begin for t in select table_name from information_schema.columns where table_schema='public' and column_name='tenant_id' and table_name not in('tenants','profiles','audit_log') loop execute format('create trigger %I_set_tenant before insert on public.%I for each row execute function public.set_current_tenant()',t,t);end loop;end$$;
