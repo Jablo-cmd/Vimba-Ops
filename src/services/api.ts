@@ -17,6 +17,9 @@ const READ_COLUMNS = {
   leave_requests:"id,employee_id,leave_type_id,start_date,end_date,status,created_at",
 } as const;
 type ReadTable = keyof typeof READ_COLUMNS;
+type ProfileStatus=Profile["status"];
+const PROFILE_STATUSES:ProfileStatus[]=["active","inactive","pending","suspended","archived"];
+function isProfileStatus(value:unknown):value is ProfileStatus{return typeof value==="string"&&PROFILE_STATUSES.includes(value as ProfileStatus);}
 
 const ORDER_COLUMNS:Record<ReadTable,string>={
   clients:"created_at",
@@ -43,7 +46,7 @@ export async function getMyProfile():Promise<Profile|null>{
   const{data,error}=await requireSupabase().from("profiles").select("id,user_id,tenant_id,client_id,full_name,role,status,employee_id").eq("user_id",user.id).maybeSingle();
   if(error)throw error;
   if(!data)return null;
-  if(typeof data.id!=="string"||typeof data.user_id!=="string"||data.user_id!==user.id||typeof data.full_name!=="string"||!isRole(data.role)||!["active","inactive","pending","suspended","archived"].includes(data.status)||!(data.tenant_id===null||typeof data.tenant_id==="string")||!(data.client_id===null||typeof data.client_id==="string")||!(data.employee_id===null||typeof data.employee_id==="string"))throw new Error("Invalid account profile.");
+  if(typeof data.id!=="string"||typeof data.user_id!=="string"||data.user_id!==user.id||typeof data.full_name!=="string"||!isRole(data.role)||!isProfileStatus(data.status)||!(data.tenant_id===null||typeof data.tenant_id==="string")||!(data.client_id===null||typeof data.client_id==="string")||!(data.employee_id===null||typeof data.employee_id==="string"))throw new Error("Invalid account profile.");
   return data as Profile;
 }
 
