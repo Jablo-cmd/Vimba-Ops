@@ -323,8 +323,6 @@ begin
     if not exists (select 1 from public.employees e where e.id=new.employee_id and e.tenant_id=new.tenant_id) then
       raise exception 'Employee does not belong to the record tenant';
     end if;
-  elsif tg_table_name='leave_requests' then
-    null;
   elsif tg_table_name='incidents' then
     if new.site_id is not null and not exists (select 1 from public.sites s where s.id=new.site_id and s.tenant_id=new.tenant_id) then
       raise exception 'Incident site does not belong to the record tenant';
