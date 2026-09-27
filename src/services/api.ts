@@ -82,11 +82,11 @@ export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]
 
 const MAX_TITLE_LENGTH=200;
 const MAX_DESCRIPTION_LENGTH=5000;
-const MAX_LEAVE_TYPE_ID_LENGTH=100;
+const MAX_LEAVE_TYPE_ID_LENGTH=36;\nconst UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function boundedText(value:string,max:number,label:string){const trimmed=value.trim();if(!trimmed)throw new Error(label+" is required.");if(trimmed.length>max)throw new Error(label+" is too long.");return trimmed;}
 
-function isISODate(value:string){if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return false;const date=new Date(value+"T00:00:00Z");return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;}
+function isISODate(value:string){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+"T00:00:00Z");return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;}
 
 export async function clockIn(){
   const employee_id=await getCurrentEmployeeId();
@@ -122,7 +122,7 @@ export async function createIncident(input:{title:string;description:string;seve
 
 export async function submitLeaveRequest(input:{leaveTypeId:string;startDate:string;endDate:string}){
   const employee_id=await getCurrentEmployeeId();
-  const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");
+  const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");\n  if(!UUID_RE.test(leave_type_id))throw new Error("Invalid leave type.");
   if(!isISODate(input.startDate)||!isISODate(input.endDate)||input.startDate>input.endDate)throw new Error("Invalid leave date range.");
   const{data,error}=await requireSupabase().from("leave_requests").insert({
     employee_id,
