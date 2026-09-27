@@ -1,1 +1,36 @@
-import {useEffect,useState} from "react";import {Plus,RefreshCw} from "lucide-react";import {insertRow,listRows,getCurrentUserId} from "../services/api";import {required} from "../lib/validation";import {Button,Card,Input,Select,Empty} from "../components/ui";import ErrorState from "../components/ErrorState";export default function IncidentPage(){const[rows,setRows]=useState<Record<string,unknown>[]>([]);const[title,setTitle]=useState("");const[severity,setSeverity]=useState("medium");const[description,setDescription]=useState("");const[error,setError]=useState("");async function load(){setError("");setRows(await listRows("incidents"))}useEffect(()=>{load().catch(()=>setError("Unable to load incidents."))},[]);async function submit(e:React.FormEvent){e.preventDefault();try{const reported_by=await getCurrentUserId();await insertRow("incidents",{reported_by,title:required(title,"Title"),description:required(description,"Description"),severity,occurred_at:new Date().toISOString(),status:"open"});setTitle("");setDescription("");await load()}catch{setError("Unable to create incident. Please try again.")}}return <div className="space-y-6"><div><p className="text-sm font-semibold text-cyan-700">Field operations</p><h2 className="text-3xl font-bold">Incidents / Occurrence Book</h2></div><div className="grid gap-6 xl:grid-cols-[420px_1fr]"><Card className="p-5"><h3 className="font-bold">New occurrence</h3><form onSubmit={submit} className="mt-5 space-y-4"><label className="block text-xs font-semibold">Title<Input required value={title} onChange={e=>setTitle(e.target.value)} className="mt-2"/></label><label className="block text-xs font-semibold">Severity<Select value={severity} onChange={e=>setSeverity(e.target.value)} className="mt-2"><option>low</option><option>medium</option><option>high</option><option>critical</option></Select></label><label className="block text-xs font-semibold">Description<textarea required value={description} onChange={e=>setDescription(e.target.value)} className="mt-2 min-h-28 w-full rounded-xl border border-slate-200 p-3 text-sm"/></label>{error&&<ErrorState message={error} onRetry={load}/>}<Button className="w-full"><Plus size={16}/>Create incident</Button></form></Card><Card><div className="flex items-center justify-between border-b border-slate-100 p-5"><h3 className="font-bold">Recent incidents</h3><button onClick={()=>load()} className="grid size-9 place-items-center rounded-lg border"><RefreshCw size={15}/></button></div>{rows.length===0?<Empty title="No incidents recorded" description="The occurrence book is ready for live entries."/>:<div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-slate-50 text-xs uppercase"><tr>{["title","severity","status","occurred_at"].map(x=><th key={x} className="px-5 py-3">{x}</th>)}</tr></thead><tbody className="divide-y">{rows.map(r=><tr key={String(r.id)}><td className="px-5 py-4 font-medium">{String(r.title)}</td><td className="px-5 py-4">{String(r.severity)}</td><td className="px-5 py-4">{String(r.status)}</td><td className="px-5 py-4">{new Date(String(r.occurred_at)).toLocaleString()}</td></tr>)}</tbody></table></div>}</Card></div></div>}
+import {useEffect,useState} from "react";
+import {Plus,RefreshCw} from "lucide-react";
+import {createIncident,listRows} from "../services/api";
+import {Button,Card,Input,Select,Empty} from "../components/ui";
+import ErrorState from "../components/ErrorState";
+
+type Severity="low"|"medium"|"high"|"critical";
+
+export default function IncidentPage(){
+  const[rows,setRows]=useState<Record<string,unknown>[]>([]);
+  const[title,setTitle]=useState("");
+  const[severity,setSeverity]=useState<Severity>("medium");
+  const[description,setDescription]=useState("");
+  const[error,setError]=useState("");
+  async function load(){setError("");setRows(await listRows("incidents"))}
+  useEffect(()=>{void load().catch(()=>setError("Unable to load incidents."))},[]);
+  async function submit(e:React.FormEvent){
+    e.preventDefault();setError("");
+    try{await createIncident({title,description,severity});setTitle("");setDescription("");await load()}
+    catch{setError("Unable to create incident. Please try again.")}
+  }
+  return <div className="space-y-6">
+    <div><p className="text-sm font-semibold text-cyan-700">Field operations</p><h2 className="text-3xl font-bold">Incidents / Occurrence Book</h2></div>
+    <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <Card className="p-5"><h3 className="font-bold">New occurrence</h3><form onSubmit={submit} className="mt-5 space-y-4">
+        <label className="block text-xs font-semibold">Title<Input required value={title} onChange={e=>setTitle(e.target.value)} className="mt-2"/></label>
+        <label className="block text-xs font-semibold">Severity<Select value={severity} onChange={e=>setSeverity(e.target.value as Severity)} className="mt-2"><option value="low">low</option><option value="medium">medium</option><option value="high">high</option><option value="critical">critical</option></Select></label>
+        <label className="block text-xs font-semibold">Description<textarea required value={description} onChange={e=>setDescription(e.target.value)} className="mt-2 min-h-28 w-full rounded-xl border border-slate-200 p-3 text-sm"/></label>
+        {error&&<ErrorState message={error} onRetry={load}/>}<Button className="w-full"><Plus size={16}/>Create incident</Button>
+      </form></Card>
+      <Card><div className="flex items-center justify-between border-b border-slate-100 p-5"><h3 className="font-bold">Recent incidents</h3><button type="button" aria-label="Refresh incidents" onClick={()=>void load()} className="grid size-9 place-items-center rounded-lg border"><RefreshCw size={15}/></button></div>
+        {rows.length===0?<Empty title="No incidents recorded" description="The occurrence book is ready for live entries."/>:<div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-slate-50 text-xs uppercase"><tr>{["title","severity","status","occurred_at"].map(x=><th key={x} className="px-5 py-3">{x}</th>)}</tr></thead><tbody className="divide-y">{rows.map(r=><tr key={String(r.id)}><td className="px-5 py-4 font-medium">{String(r.title)}</td><td className="px-5 py-4">{String(r.severity)}</td><td className="px-5 py-4">{String(r.status)}</td><td className="px-5 py-4">{new Date(String(r.occurred_at)).toLocaleString()}</td></tr>)}</tbody></table></div>}
+      </Card>
+    </div>
+  </div>
+}
