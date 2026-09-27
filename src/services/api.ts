@@ -74,9 +74,8 @@ export async function listRows(table:ReadTable){
   return data??[];
 }
 
-export async function clockIn(employeeId:string){
-  const employee_id=employeeId.trim();
-  if(!employee_id)throw new Error("Employee record required.");
+export async function clockIn(){
+  const employee_id=await getCurrentEmployeeId();
   const{data:existing,error:existingError}=await requireSupabase().from("attendance").select("id").eq("employee_id",employee_id).eq("attendance_date",todayISO()).limit(1);
   if(existingError)throw existingError;
   if(existing?.length)throw new Error("Attendance already recorded for today.");
