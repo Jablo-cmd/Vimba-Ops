@@ -1,6 +1,6 @@
 import {useEffect,useState} from "react";
 import {CheckCircle2,Clock3} from "lucide-react";
-import {clockIn,listRows,getCurrentEmployeeId} from "../services/api";
+import {clockIn,listRows} from "../services/api";
 import {Button,Card,Empty} from "../components/ui";
 import ErrorState from "../components/ErrorState";
 
