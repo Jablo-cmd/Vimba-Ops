@@ -1,6 +1,7 @@
 import {requireSupabase} from "../lib/supabase";
 import {todayISO} from "../lib/date";
 import type {DashboardMetrics,Profile} from "../types";
+import {isRole} from "../lib/roles";
 
 const READ_COLUMNS = {
   clients:"id,name,status,account_number,created_at",
@@ -41,7 +42,9 @@ export async function getMyProfile():Promise<Profile|null>{
   const user=await currentUser();
   const{data,error}=await requireSupabase().from("profiles").select("id,user_id,tenant_id,client_id,full_name,role,status,employee_id").eq("user_id",user.id).maybeSingle();
   if(error)throw error;
-  return data as Profile|null;
+  if(!data)return null;
+  if(typeof data.id!=="string"||typeof data.user_id!=="string"||data.user_id!==user.id||typeof data.full_name!=="string"||!isRole(data.role)||!["active","inactive","pending","suspended","archived"].includes(data.status)||!(data.tenant_id===null||typeof data.tenant_id==="string")||!(data.client_id===null||typeof data.client_id==="string")||!(data.employee_id===null||typeof data.employee_id==="string"))throw new Error("Invalid account profile.");
+  return data as Profile;
 }
 
 export async function getCurrentUserId(){return (await currentUser()).id;}
