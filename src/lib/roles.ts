@@ -2,19 +2,9 @@ export const ROLES = ["platform_owner","super_administrator","administrator","op
 export type Role = (typeof ROLES)[number];
 export const roleLabels: Record<Role,string> = {platform_owner:"Platform Owner",super_administrator:"Super Administrator",administrator:"Administrator",operations_manager:"Operations Manager",area_manager:"Area Manager",site_supervisor:"Site Supervisor",hr:"HR",finance:"Finance",compliance:"Compliance",guard:"Guard",client_administrator:"Client Administrator",client_user:"Client User"};
 export const internalRoles: Role[] = ["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","finance","compliance","guard"];
+export function isRole(value:unknown):value is Role{return typeof value==="string"&&(ROLES as readonly string[]).includes(value);}
 export const navigationAccess: Record<string,Role[]> = {
-  "/":[...ROLES],
-  "/clients":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor"],
-  "/sites":[...internalRoles,"client_administrator","client_user"],
-  "/workforce":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr"],
-  "/roster":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor"],
-  "/attendance":[...internalRoles,"client_administrator","client_user"],
-  "/patrols":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","guard","client_administrator","client_user"],
-  "/incidents":[...internalRoles,"client_administrator","client_user"],
-  "/leave":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","guard"],
-  "/inventory":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","finance","compliance"],
-  "/compliance":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","compliance","client_administrator","client_user"],
-  "/reports":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","finance","compliance","client_administrator","client_user"],
+  "/":[...ROLES],"/clients":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor"],"/sites":[...internalRoles,"client_administrator","client_user"],"/workforce":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr"],"/roster":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor"],"/attendance":[...internalRoles,"client_administrator","client_user"],"/patrols":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","guard","client_administrator","client_user"],"/incidents":[...internalRoles,"client_administrator","client_user"],"/leave":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","guard"],"/inventory":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","finance","compliance"],"/compliance":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","compliance","client_administrator","client_user"],"/reports":["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","finance","compliance","client_administrator","client_user"],
 };
 export function canAccess(role:Role|null|undefined,allowed:Role[]){return !!role&&allowed.includes(role);}
 export function canAccessPath(role:Role|null|undefined,path:string){return canAccess(role,navigationAccess[path]??[]);}
