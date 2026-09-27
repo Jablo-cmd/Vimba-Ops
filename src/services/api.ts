@@ -77,6 +77,14 @@ export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]
   return (data??[]) as Record<string,unknown>[];
 }
 
+const MAX_TITLE_LENGTH=200;
+const MAX_DESCRIPTION_LENGTH=5000;
+const MAX_LEAVE_TYPE_ID_LENGTH=100;
+
+function boundedText(value:string,max:number,label:string){const trimmed=value.trim();if(!trimmed)throw new Error(label+" is required.");if(trimmed.length>max)throw new Error(label+" is too long.");return trimmed;}
+
+function isISODate(value:string){if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return false;const date=new Date(value+"T00:00:00Z");return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;}
+
 export async function clockIn(){
   const employee_id=await getCurrentEmployeeId();
   const{data:existing,error:existingError}=await requireSupabase().from("attendance").select("id").eq("employee_id",employee_id).eq("attendance_date",todayISO()).limit(1);
@@ -93,9 +101,9 @@ export async function clockIn(){
 }
 
 export async function createIncident(input:{title:string;description:string;severity:"low"|"medium"|"high"|"critical"}){
-  const title=input.title.trim();
-  const description=input.description.trim();
-  if(!title||!description)throw new Error("Title and description are required.");
+  const title=boundedText(input.title,MAX_TITLE_LENGTH,"Incident title");
+  const description=boundedText(input.description,MAX_DESCRIPTION_LENGTH,"Incident description");
+  if(!["low","medium","high","critical"].includes(input.severity))throw new Error("Invalid incident severity.");
   const reported_by=await getCurrentUserId();
   const{data,error}=await requireSupabase().from("incidents").insert({
     reported_by,
@@ -111,8 +119,8 @@ export async function createIncident(input:{title:string;description:string;seve
 
 export async function submitLeaveRequest(input:{leaveTypeId:string;startDate:string;endDate:string}){
   const employee_id=await getCurrentEmployeeId();
-  const leave_type_id=input.leaveTypeId.trim();
-  if(!employee_id||!leave_type_id||!input.startDate||!input.endDate)throw new Error("Leave request details are required.");
+  const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");
+  if(!isISODate(input.startDate)||!isISODate(input.endDate)||input.startDate>input.endDate)throw new Error("Invalid leave date range.");
   const{data,error}=await requireSupabase().from("leave_requests").insert({
     employee_id,
     leave_type_id,
