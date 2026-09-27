@@ -107,8 +107,8 @@ export async function createIncident(input:{title:string;description:string;seve
   return data;
 }
 
-export async function submitLeaveRequest(input:{employeeId:string;leaveTypeId:string;startDate:string;endDate:string}){
-  const employee_id=input.employeeId.trim();
+export async function submitLeaveRequest(input:{leaveTypeId:string;startDate:string;endDate:string}){
+  const employee_id=await getCurrentEmployeeId();
   const leave_type_id=input.leaveTypeId.trim();
   if(!employee_id||!leave_type_id||!input.startDate||!input.endDate)throw new Error("Leave request details are required.");
   const{data,error}=await requireSupabase().from("leave_requests").insert({
