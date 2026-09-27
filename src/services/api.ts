@@ -47,7 +47,7 @@ export async function getMyProfile():Promise<Profile|null>{
   if(error)throw error;
   if(!data)return null;
   if(typeof data.id!=="string"||typeof data.user_id!=="string"||data.user_id!==user.id||typeof data.full_name!=="string"||!isRole(data.role)||!isProfileStatus(data.status)||!(data.tenant_id===null||typeof data.tenant_id==="string")||!(data.client_id===null||typeof data.client_id==="string")||!(data.employee_id===null||typeof data.employee_id==="string"))throw new Error("Invalid account profile.");
-  return data as Profile;
+  return data;
 }
 
 export async function getCurrentUserId(){return (await currentUser()).id;}
