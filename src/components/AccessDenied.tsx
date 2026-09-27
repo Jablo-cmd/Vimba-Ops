@@ -1,0 +1,2 @@
+import {Link} from "react-router-dom";
+export default function AccessDenied(){return <div className="grid min-h-[60vh] place-items-center text-center"><div className="max-w-md"><p className="text-sm font-semibold text-cyan-700">403</p><h2 className="mt-2 text-3xl font-bold">Access restricted</h2><p className="mt-2 text-sm text-slate-500">Your assigned Vimba Ops role does not permit access to this workspace.</p><Link to="/" className="mt-5 inline-block rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white">Return to command centre</Link></div></div>}
