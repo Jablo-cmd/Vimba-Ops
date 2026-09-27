@@ -1,6 +1,6 @@
 import {useEffect,useState} from "react";
 import {Plus,RefreshCw} from "lucide-react";
-import {createIncident,listRows} from "../services/api";
+import {createIncident,listIncidents} from "../services/api";
 import {Button,Card,Input,Select,Empty} from "../components/ui";
 import ErrorState from "../components/ErrorState";
 
@@ -18,7 +18,7 @@ export default function IncidentPage(){
   async function load(){
     setError("");
     setLoading(true);
-    try{setRows(await listRows("incidents"))}
+    try{setRows(await listIncidents())}
     catch{setError("Unable to load incidents.")}
     finally{setLoading(false)}
   }
