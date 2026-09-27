@@ -70,7 +70,7 @@ export async function dashboardMetrics():Promise<DashboardMetrics>{
   return{sites:sites.count??0,guards:guards.count??0,onDuty:onDuty.count??0,openIncidents:incidents.count??0,unresolvedAlerts:alerts.count??0,complianceExceptions:compliance.count??0};
 }
 
-export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]{
+export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]> {
   const columns=READ_COLUMNS[table];
   const{data,error}=await requireSupabase().from(table).select(columns).order(ORDER_COLUMNS[table],{ascending:false}).limit(100);
   if(error)throw error;
