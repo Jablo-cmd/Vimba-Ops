@@ -74,7 +74,7 @@ export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]
   const columns=READ_COLUMNS[table];
   const{data,error}=await requireSupabase().from(table).select(columns as string).order(ORDER_COLUMNS[table],{ascending:false}).limit(100);
   if(error)throw error;
-  return (data??[]) as Record<string,unknown>[];
+  return (data??[]) as unknown as Record<string,unknown>[];
 }
 
 const MAX_TITLE_LENGTH=200;
