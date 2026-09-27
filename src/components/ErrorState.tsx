@@ -1,0 +1,2 @@
+import {RefreshCw} from "lucide-react";import {Button,Card} from "./ui";
+export default function ErrorState({message,onRetry}:{message:string;onRetry?:()=>void}){return <Card role="alert" className="border-red-200 bg-red-50 p-5"><p className="text-sm font-semibold text-red-800">Unable to complete this operation</p><p className="mt-1 text-sm text-red-700">{message}</p>{onRetry&&<Button type="button" onClick={onRetry} className="mt-4 bg-white text-red-800 ring-1 ring-red-200"><RefreshCw size={15}/>Retry</Button>}</Card>}
