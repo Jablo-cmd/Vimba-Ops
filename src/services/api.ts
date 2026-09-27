@@ -80,6 +80,11 @@ export async function listRows(table:ReadTable):Promise<Record<string,unknown>[]
   return (data??[]) as unknown as Record<string,unknown>[];
 }
 
+
+async function listScopedRows(table:ReadTable,employeeId?:string):Promise<Record<string,unknown>[]> { const columns=READ_COLUMNS[table]; let query=requireSupabase().from(table).select(columns as string).order(ORDER_COLUMNS[table],{ascending:false}).limit(100); if(employeeId)query=query.eq("employee_id",employeeId); const{data,error}=await query; if(error)throw error; return (data??[]) as unknown as Record<string,unknown>[]; }
+export async function listAttendance(){const profile=await getMyProfile();return listScopedRows("attendance",profile?.role==="guard"?profile.employee_id??undefined:undefined);}
+export async function listLeaveRequests(){const profile=await getMyProfile();return listScopedRows("leave_requests",profile?.role==="guard"?profile.employee_id??undefined:undefined);}
+export async function listIncidents(){const profile=await getMyProfile();const columns=READ_COLUMNS.incidents;let query=requireSupabase().from("incidents").select(columns as string).order(ORDER_COLUMNS.incidents,{ascending:false}).limit(100);if(profile?.role==="guard")query=query.eq("reported_by",profile.user_id);const{data,error}=await query;if(error)throw error;return (data??[]) as unknown as Record<string,unknown>[];}
 const MAX_TITLE_LENGTH=200;
 const MAX_DESCRIPTION_LENGTH=5000;
 const MAX_LEAVE_TYPE_ID_LENGTH=36;\nconst UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
