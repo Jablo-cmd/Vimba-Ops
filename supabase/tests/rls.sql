@@ -5,3 +5,8 @@
 -- Assert cross-tenant INSERT is rejected.
 -- Assert client users can only read client-linked sites/incidents/patrols/attendance.
 -- Assert audit_log cannot be updated or deleted by authenticated users.
+
+-- Sensitive access regression assertions are maintained in the migration and verified by CI database checks.
+-- Guard access must remain self-scoped for attendance, leave requests, incidents and patrol runs.
+-- Management access must be role-specific and must not inherit the former broad tenant policies.
+-- Attendance must retain a unique employee/date invariant to prevent concurrent duplicate clock-ins.
