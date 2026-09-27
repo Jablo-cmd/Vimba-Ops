@@ -87,7 +87,8 @@ export async function listLeaveRequests(){const profile=await getMyProfile();ret
 export async function listIncidents(){const profile=await getMyProfile();const columns=READ_COLUMNS.incidents;let query=requireSupabase().from("incidents").select(columns as string).order(ORDER_COLUMNS.incidents,{ascending:false}).limit(100);if(profile?.role==="guard")query=query.eq("reported_by",profile.user_id);const{data,error}=await query;if(error)throw error;return (data??[]) as unknown as Record<string,unknown>[];}
 const MAX_TITLE_LENGTH=200;
 const MAX_DESCRIPTION_LENGTH=5000;
-const MAX_LEAVE_TYPE_ID_LENGTH=36;\nconst UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MAX_LEAVE_TYPE_ID_LENGTH=36;
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function boundedText(value:string,max:number,label:string){const trimmed=value.trim();if(!trimmed)throw new Error(label+" is required.");if(trimmed.length>max)throw new Error(label+" is too long.");return trimmed;}
 
@@ -127,7 +128,8 @@ export async function createIncident(input:{title:string;description:string;seve
 
 export async function submitLeaveRequest(input:{leaveTypeId:string;startDate:string;endDate:string}){
   const employee_id=await getCurrentEmployeeId();
-  const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");\n  if(!UUID_RE.test(leave_type_id))throw new Error("Invalid leave type.");
+  const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");
+  if(!UUID_RE.test(leave_type_id))throw new Error("Invalid leave type.");
   if(!isISODate(input.startDate)||!isISODate(input.endDate)||input.startDate>input.endDate)throw new Error("Invalid leave date range.");
   const{data,error}=await requireSupabase().from("leave_requests").insert({
     employee_id,
