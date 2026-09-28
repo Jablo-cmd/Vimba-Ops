@@ -93,15 +93,6 @@ using (
   )
 );
 
-drop policy if exists ai_runs_insert on public.ai_analysis_runs;
-create policy ai_runs_insert on public.ai_analysis_runs
-for insert to authenticated
-with check (
-  requested_by = (select auth.uid())
-  and tenant_id = (select p.tenant_id from public.profiles p where p.user_id = (select auth.uid()) limit 1)
-);
-
-drop policy if exists ai_insights_select on public.ai_insights;
 create policy ai_insights_select on public.ai_insights
 for select to authenticated
 using (
@@ -180,8 +171,8 @@ revoke all on public.ai_insights from anon;
 revoke all on public.ai_feedback from anon;
 revoke all on public.ai_chat_sessions from anon;
 revoke all on public.ai_chat_messages from anon;
-grant select, insert on public.ai_analysis_runs to authenticated;
-grant select, insert, update on public.ai_insights to authenticated;
+grant select on public.ai_analysis_runs to authenticated;
+grant select, update on public.ai_insights to authenticated;
 grant select, insert on public.ai_feedback to authenticated;
 grant select, insert, update on public.ai_chat_sessions to authenticated;
 grant select, insert on public.ai_chat_messages to authenticated;
