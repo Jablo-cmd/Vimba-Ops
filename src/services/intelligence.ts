@@ -20,16 +20,17 @@ function parseRun(value:unknown):{runId:string;provider:string;model:string;insi
 }
 
 export async function runIntelligence(analysisType:IntelligenceType){
-  const{data,error}=await requireSupabase().functions.invoke("ai-orchestrator",{body:{analysisType}});
+  const response=await requireSupabase().functions.invoke("ai-orchestrator",{body:{analysisType}});
+  const error=response.error;
   if(error)throw new Error("Intelligence analysis is temporarily unavailable.");
-  const parsed=parseRun(data);
+  const parsed=parseRun(response.data);
   if(!parsed)throw new Error("The intelligence engine returned an invalid response.");
   return parsed;
 }
 export async function listInsights():Promise<Insight[]>{
-  const{data,error}=await requireSupabase().from("ai_insights").select("id,insight_type,severity,title,summary,rationale,confidence,evidence,recommended_actions,created_at").eq("status","active").order("created_at",{ascending:false}).limit(50);
-  if(error)throw new Error("Unable to load intelligence insights.");
-  const rows:unknown=data;
+  const response=await requireSupabase().from("ai_insights").select("id,insight_type,severity,title,summary,rationale,confidence,evidence,recommended_actions,created_at").eq("status","active").order("created_at",{ascending:false}).limit(50);
+  if(response.error)throw new Error("Unable to load intelligence insights.");
+  const rows:unknown=response.data;
   return Array.isArray(rows)?rows.filter(isInsight):[];
 }
 export function intelligenceLabel(type:IntelligenceType){return ALLOWED[type];}
