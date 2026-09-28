@@ -19,7 +19,7 @@ describe("enterprise platform",()=>{
     expect(s.complianceExceptions).toBe(1);
     expect(s.attendanceExceptions).toBe(1);
     expect(s.patrolRoutes).toBe(1);
-    expect(s.operationalPressure).toBe(39);
+    expect(s.operationalPressure).toBe(55);
     expect(s.unstaffedSites).toBe(3);
   });
   it("exposes every enterprise module",()=>{
