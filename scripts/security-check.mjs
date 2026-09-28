@@ -1,6 +1,6 @@
 import {readFile} from "node:fs/promises";
 
-const migration=await readFile("supabase/migrations/20260928100000_sensitive_access_hardening.sql","utf8");
+const migration=await readFile("supabase/migrations/20260928100000_sensitive_access_hardening.sql","utf8");\nconst aiMigration=await readFile("supabase/migrations/20260928110000_ai_intelligence_foundation.sql","utf8");\nconst aiFunction=await readFile("supabase/functions/ai-orchestrator/index.ts","utf8");
 const required=[
   "attendance_management_select",
   "attendance_management_insert",
@@ -51,4 +51,4 @@ const forbidden=[
   "create policy patrol_runs_delete on"
 ];
 for(const token of forbidden)if(migration.includes(token))throw new Error("Forbidden broad policy present: "+token);
-console.log("Security source invariants passed.");
+const aiRequired=["ai_analysis_runs","ai_insights","ai_feedback","ai_chat_sessions","ai_chat_messages","enable row level security","ai_insights_id_tenant_unique","ai_feedback_insight_tenant_fk","ai_feedback_run_tenant_fk","grant select on public.ai_analysis_runs to authenticated","grant select, update on public.ai_insights to authenticated"];\nfor(const token of aiRequired)if(!aiMigration.includes(token))throw new Error("Missing AI security invariant: "+token);\nfor(const token of ["SUPABASE_SERVICE_ROLE_KEY","allowedRoles","Active tenant profile required","Your role does not have access to intelligence"])if(!aiFunction.includes(token))throw new Error("Missing AI runtime guard: "+token);\nconsole.log("Security source invariants passed.");
