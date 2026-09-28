@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useState} from "react";
-import {Activity ,AlertTriangle,BarChart3,BriefcaseBusiness,CheckCircle2,ClipboardCheck,CloudCog,Database,FileText,GitBranch,LockKeyhole,Network,RefreshCw,ShieldCheck,Users,Workflow} from "lucide-react";
+import {Activity,BarChart3,BriefcaseBusiness,CloudCog,Database,FileText,GitBranch,LockKeyhole,Network,RefreshCw,Users,Workflow} from "lucide-react";
 import {Card,Button,Spinner} from "../components/ui";
 import ErrorState from "../components/ErrorState";
 import {derivePlatformSignals,moduleReadiness,platformSnapshot,PLATFORM_MODULES,type PlatformModule,type PlatformSnapshot} from "../services/enterprisePlatform";
