@@ -20,7 +20,7 @@ function parseRun(value:unknown):{runId:string;provider:string;model:string;insi
 }
 
 export async function runIntelligence(analysisType:IntelligenceType){
-  const response=await requireSupabase().functions.invoke("ai-orchestrator",{body:{analysisType}});
+  const response=await requireSupabase().functions.invoke("ai-orchestrator",{body:{analysisType}}) as unknown as {data:unknown;error:unknown};
   const error=response.error;
   if(error)throw new Error("Intelligence analysis is temporarily unavailable.");
   const parsed=parseRun(response.data as unknown);
