@@ -23,7 +23,7 @@ export async function runIntelligence(analysisType:IntelligenceType){
   const response=await requireSupabase().functions.invoke("ai-orchestrator",{body:{analysisType}});
   const error=response.error;
   if(error)throw new Error("Intelligence analysis is temporarily unavailable.");
-  const parsed=parseRun(response.data);
+  const parsed=parseRun(response.data as unknown);
   if(!parsed)throw new Error("The intelligence engine returned an invalid response.");
   return parsed;
 }
