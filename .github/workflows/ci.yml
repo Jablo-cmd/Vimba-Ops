@@ -1,7 +1,7 @@
 name: Vimba Ops CI
 on:
   push:
-    branches: [main, production-enterprise, hardening/code-foundation]
+    branches: [main, production-enterprise, hardening/code-foundation, feature/ai-intelligence]
   pull_request:
     branches: [main]
   workflow_dispatch:
