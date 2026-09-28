@@ -18,12 +18,12 @@ async function main(req:Request){
   const auth=req.headers.get("Authorization");
   if(!supabaseUrl||!anonKey||!auth)return json({error:"Service configuration or authentication missing."},401);
 
-  const supabase=createClient(supabaseUrl,anonKey,{global:{headers:{Authorization:auth}}});
+  const supabase=createClient(supabaseUrl,anonKey,{global:{headers:{Authorization:auth}}});\n  const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";\n  if(!serviceKey)return json({error:"AI service is not configured."},503);\n  const admin=createClient(supabaseUrl,serviceKey);
   const {data:{user},error:userError}=await supabase.auth.getUser();
   if(userError||!user)return json({error:"Authenticated user required."},401);
 
   const {data:profile,error:profileError}=await supabase.from("profiles").select("id,tenant_id,full_name,role,status").eq("user_id",user.id).maybeSingle();
-  if(profileError||!profile||profile.status!=="active"||!profile.tenant_id)return json({error:"Active tenant profile required."},403);
+  if(profileError||!profile||profile.status!=="active"||!profile.tenant_id)return json({error:"Active tenant profile required."},403);\n  const allowedRoles=["platform_owner","super_administrator","administrator","operations_manager","area_manager","site_supervisor","hr","finance","compliance","client_administrator","client_user"];\n  if(!allowedRoles.includes(String(profile.role)))return json({error:"Your role does not have access to intelligence."},403);
 
   const body=await req.json().catch(()=>({}));
   const type=isAnalysisType(body?.analysisType)?body.analysisType:"executive";
@@ -53,7 +53,7 @@ async function main(req:Request){
     recent_incidents:(recentIncidents.data??[]).map((x)=>({title:clampText(String(x.title??""),160),severity:x.severity,status:x.status,occurred_at:x.occurred_at})),
   };
 
-  const {data:run,error:runError}=await db.from("ai_analysis_runs").insert({
+  const {data:run,error:runError}=await admin.from("ai_analysis_runs").insert({
     tenant_id:profile.tenant_id,requested_by:user.id,analysis_type:type,status:"running",
     input_scope:{analysis_type:type,data_window:"current_snapshot_plus_recent_incidents"},
   }).select("id").single();
@@ -100,9 +100,9 @@ Snapshot:\n${JSON.stringify(context)}`;
     recommended_actions:Array.isArray(x.recommended_actions)?x.recommended_actions.slice(0,10):[],
     tenant_id:profile.tenant_id,analysis_run_id:run.id,generated_by:user.id,
   }));
-  const {data:saved,error:saveError}=await db.from("ai_insights").insert(cleaned).select("id,insight_type,severity,title,summary,rationale,confidence,evidence,recommended_actions,created_at");
-  if(saveError){await db.from("ai_analysis_runs").update({status:"failed",error_code:"INSIGHT_SAVE_FAILED",completed_at:new Date().toISOString()}).eq("id",run.id);return json({error:"Intelligence results could not be stored."},500)}
-  await db.from("ai_analysis_runs").update({status:"completed",model_provider:provider,model_name:modelName,output_summary:{insight_count:saved?.length??0},completed_at:new Date().toISOString()}).eq("id",run.id);
+  const {data:saved,error:saveError}=await admin.from("ai_insights").insert(cleaned).select("id,insight_type,severity,title,summary,rationale,confidence,evidence,recommended_actions,created_at");
+  if(saveError){await admin.from("ai_analysis_runs").update({status:"failed",error_code:"INSIGHT_SAVE_FAILED",completed_at:new Date().toISOString()}).eq("id",run.id);return json({error:"Intelligence results could not be stored."},500)}
+  await admin.from("ai_analysis_runs").update({status:"completed",model_provider:provider,model_name:modelName,output_summary:{insight_count:saved?.length??0},completed_at:new Date().toISOString()}).eq("id",run.id);
   return json({runId:run.id,provider,model:modelName,insights:saved??[]});
 }
 
