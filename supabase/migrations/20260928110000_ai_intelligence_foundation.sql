@@ -18,7 +18,7 @@ create table if not exists public.ai_analysis_runs (
 create table if not exists public.ai_insights (
   id uuid primary key default gen_random_uuid(),
   tenant_id uuid not null references public.tenants(id) on delete cascade,
-  analysis_run_id uuid references public.ai_analysis_runs(id) on delete set null,
+  analysis_run_id uuid,
   insight_type text not null check (insight_type in ('anomaly','trend','risk','opportunity','recommendation','summary')),
   severity text not null default 'info' check (severity in ('info','low','medium','high','critical')),
   title text not null check (char_length(title) between 1 and 200),
@@ -67,7 +67,7 @@ create table if not exists public.ai_chat_messages (
   created_at timestamptz not null default now()
 );
 
-create index if not exists ai_analysis_runs_tenant_created_idx on public.ai_analysis_runs(tenant_id, created_at desc);
+alter table public.ai_analysis_runs add constraint ai_analysis_runs_id_tenant_unique unique (id, tenant_id);\nalter table public.ai_insights add constraint ai_insights_id_tenant_unique unique (id, tenant_id);\nalter table public.ai_feedback add constraint ai_feedback_insight_tenant_fk foreign key (insight_id, tenant_id) references public.ai_insights(id, tenant_id) on delete cascade;\nalter table public.ai_feedback add constraint ai_feedback_run_tenant_fk foreign key (run_id, tenant_id) references public.ai_analysis_runs(id, tenant_id) on delete cascade;\nalter table public.ai_chat_sessions add constraint ai_chat_sessions_id_tenant_unique unique (id, tenant_id);\n\ncreate index if not exists ai_analysis_runs_tenant_created_idx on public.ai_analysis_runs(tenant_id, created_at desc);
 create index if not exists ai_insights_tenant_status_created_idx on public.ai_insights(tenant_id, status, created_at desc);
 create index if not exists ai_insights_tenant_type_created_idx on public.ai_insights(tenant_id, insight_type, created_at desc);
 create index if not exists ai_feedback_tenant_created_idx on public.ai_feedback(tenant_id, created_at desc);
