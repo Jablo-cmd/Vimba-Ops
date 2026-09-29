@@ -6,7 +6,7 @@ const roles=await readFile("src/lib/roles.ts","utf8");
 const shell=await readFile("src/components/AppShell.tsx","utf8");
 const enterpriseService=await readFile("src/services/enterprisePlatform.ts","utf8");
 
-for(const token of ["SUPABASE_SERVICE_ROLE_KEY","allowedRoles","Active tenant profile required","Your role does not have access to intelligence"]){
+for(const token of ["Authorization","INTERNAL_ROLES","SUPABASE_PUBLISHABLE_KEYS","active internal tenant profile","analysisType"]){
   if(!aiFunction.includes(token))throw new Error("Missing AI runtime guard: "+token);
 }
 
