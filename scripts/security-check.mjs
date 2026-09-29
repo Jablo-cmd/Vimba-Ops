@@ -1,7 +1,10 @@
 import {readFile} from "node:fs/promises";
 
-const migration=await readFile("supabase/migrations/20260928100000_sensitive_access_hardening.sql","utf8");
-const aiMigration=await readFile("supabase/migrations/20260928110000_ai_intelligence_foundation.sql","utf8");
+const aiFunction=await readFile("supabase/functions/ai-orchestrator/index.ts","utf8");
+const app=await readFile("src/App.tsx","utf8");
+const roles=await readFile("src/lib/roles.ts","utf8");
+const shell=await readFile("src/components/AppShell.tsx","utf8");
+
 const aiFunction=await readFile("supabase/functions/ai-orchestrator/index.ts","utf8");
 const app=await readFile("src/App.tsx","utf8");
 const roles=await readFile("src/lib/roles.ts","utf8");
