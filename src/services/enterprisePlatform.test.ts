@@ -4,7 +4,7 @@ import {derivePlatformSignals,moduleReadiness,PLATFORM_MODULES,type PlatformSnap
 const snapshot=():PlatformSnapshot=>({
   metrics:{sites:3,guards:5,onDuty:2,openIncidents:2,unresolvedAlerts:0,complianceExceptions:1},
   sites:[{id:"s1"},{id:"s2"},{id:"s3"}],
-  employees:[{id:"e1",employment_status:"active"},{id:"e2",employment_status:"active"}],
+  employees:[{id:"e1",employment_status:"active",site_id:"s1"},{id:"e2",employment_status:"active",site_id:"s2"}],
   attendance:[{id:"a1",status:"late"},{id:"a2",status:"on_duty"}],
   incidents:[{id:"i1",status:"open"},{id:"i2",status:"escalated"}],
   compliance:[{id:"c1",status:"expired"}],
@@ -20,7 +20,7 @@ describe("enterprise platform",()=>{
     expect(s.attendanceExceptions).toBe(1);
     expect(s.patrolRoutes).toBe(1);
     expect(s.operationalPressure).toBe(55);
-    expect(s.unstaffedSites).toBe(3);
+    expect(s.staffedSites).toBe(2);\n    expect(s.unstaffedSites).toBe(1);
   });
   it("exposes every enterprise module",()=>{
     expect(Object.keys(PLATFORM_MODULES)).toHaveLength(12);
