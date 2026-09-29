@@ -6,7 +6,7 @@ import {isRole} from "../lib/roles";
 const READ_COLUMNS = {
   clients:"id,name,status,account_number,created_at",
   sites:"id,name,status,city,operating_hours,created_at",
-  employees:"id,employee_number,full_name,rank,employment_status,created_at",
+  employees:"id,employee_number,full_name,rank,employment_status,site_id,created_at",
   assets:"id,asset_number,name,category,status,created_at",
   compliance_items:"id,subject_name,document_type,status,expiry_date,created_at",
   saved_reports:"id,name,report_type,created_at",
