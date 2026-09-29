@@ -1,0 +1,1 @@
+-- Cover remaining foreign keys identified by Supabase performance advisors.\ncreate index if not exists patrol_runs_employee_idx on public.patrol_runs(employee_id);\ncreate index if not exists posts_tenant_idx on public.posts(tenant_id);\n
