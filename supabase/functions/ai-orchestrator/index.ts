@@ -184,7 +184,6 @@ Deno.serve(async (req) => {
       const id = String(site.id);
       const score = Math.min(100,
         incidentRows.filter((i) => String(i.site_id) === id && ["open","under_review","escalated"].includes(String(i.status))).length * 10 +
-        complianceRows.filter((c) => ["expired","expiring"].includes(String(c.status))).length * 8 +
         (staffedSiteIds.has(id) ? 0 : 20)
       );
       return { site_id: id, site_name: site.name, score };
