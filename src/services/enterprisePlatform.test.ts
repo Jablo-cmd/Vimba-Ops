@@ -20,7 +20,8 @@ describe("enterprise platform",()=>{
     expect(s.attendanceExceptions).toBe(1);
     expect(s.patrolRoutes).toBe(1);
     expect(s.operationalPressure).toBe(55);
-    expect(s.staffedSites).toBe(2);\n    expect(s.unstaffedSites).toBe(1);
+    expect(s.staffedSites).toBe(2);
+    expect(s.unstaffedSites).toBe(1);
   });
   it("exposes every enterprise module",()=>{
     expect(Object.keys(PLATFORM_MODULES)).toHaveLength(12);
