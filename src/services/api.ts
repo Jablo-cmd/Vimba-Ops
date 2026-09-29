@@ -60,13 +60,21 @@ export async function getCurrentEmployeeId(){
 
 export async function dashboardMetrics():Promise<DashboardMetrics>{
   const db=requireSupabase();
+  const profile=await getMyProfile();
+  const role=profile?.role;
+  const clientRole=role==="client_administrator"||role==="client_user";
+  const guardRole=role==="guard";
   const [sites,guards,onDuty,incidents,alerts,compliance]=await Promise.all([
     db.from("sites").select("id",{count:"exact",head:true}).eq("status","active"),
-    db.from("employees").select("id",{count:"exact",head:true}).eq("employment_status","active"),
+    clientRole
+      ? Promise.resolve({count:0,error:null})
+      : db.from("employees").select("id",{count:"exact",head:true}).eq("employment_status","active"),
     db.from("attendance").select("id",{count:"exact",head:true}).eq("status","on_duty").eq("attendance_date",todayISO()),
     db.from("incidents").select("id",{count:"exact",head:true}).in("status",["open","under_review","escalated"]),
     db.from("notifications").select("id",{count:"exact",head:true}).is("read_at",null),
-    db.from("compliance_items").select("id",{count:"exact",head:true}).in("status",["expired","expiring"]),
+    clientRole||guardRole
+      ? Promise.resolve({count:0,error:null})
+      : db.from("compliance_items").select("id",{count:"exact",head:true}).in("status",["expired","expiring"]),
   ]);
   const e=[sites,guards,onDuty,incidents,alerts,compliance].find(x=>x.error)?.error;
   if(e)throw e;
@@ -95,11 +103,15 @@ function boundedText(value:string,max:number,label:string){const trimmed=value.t
 function isISODate(value:string){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+"T00:00:00Z");return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;}
 
 export async function clockIn(){
-  const employee_id=await getCurrentEmployeeId();
+  const profile=await getMyProfile();
+  const employee_id=profile?.employee_id;
+  const tenant_id=profile?.tenant_id;
+  if(!employee_id||!tenant_id)throw new Error("Your account is not linked to an active tenant employee record.");
   const{data:existing,error:existingError}=await requireSupabase().from("attendance").select("id").eq("employee_id",employee_id).eq("attendance_date",todayISO()).limit(1);
   if(existingError)throw existingError;
   if(existing?.length)throw new Error("Attendance already recorded for today.");
   const{data,error}=await requireSupabase().from("attendance").insert({
+    tenant_id,
     employee_id,
     attendance_date:todayISO(),
     clock_in:new Date().toISOString(),
@@ -113,8 +125,11 @@ export async function createIncident(input:{title:string;description:string;seve
   const title=boundedText(input.title,MAX_TITLE_LENGTH,"Incident title");
   const description=boundedText(input.description,MAX_DESCRIPTION_LENGTH,"Incident description");
   if(!["low","medium","high","critical"].includes(input.severity))throw new Error("Invalid incident severity.");
+  const profile=await getMyProfile();
   const reported_by=await getCurrentUserId();
+  if(!profile?.tenant_id)throw new Error("Your account is not linked to an active tenant.");
   const{data,error}=await requireSupabase().from("incidents").insert({
+    tenant_id:profile.tenant_id,
     reported_by,
     title,
     description,
@@ -127,11 +142,15 @@ export async function createIncident(input:{title:string;description:string;seve
 }
 
 export async function submitLeaveRequest(input:{leaveTypeId:string;startDate:string;endDate:string}){
-  const employee_id=await getCurrentEmployeeId();
+  const profile=await getMyProfile();
+  const employee_id=profile?.employee_id;
+  const tenant_id=profile?.tenant_id;
+  if(!employee_id||!tenant_id)throw new Error("Your account is not linked to an active tenant employee record.");
   const leave_type_id=boundedText(input.leaveTypeId,MAX_LEAVE_TYPE_ID_LENGTH,"Leave type ID");
   if(!UUID_RE.test(leave_type_id))throw new Error("Invalid leave type.");
   if(!isISODate(input.startDate)||!isISODate(input.endDate)||input.startDate>input.endDate)throw new Error("Invalid leave date range.");
   const{data,error}=await requireSupabase().from("leave_requests").insert({
+    tenant_id,
     employee_id,
     leave_type_id,
     start_date:input.startDate,
